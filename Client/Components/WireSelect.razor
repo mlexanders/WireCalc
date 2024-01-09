@@ -1,0 +1,32 @@
+﻿@using WireCalc.Client.Models
+
+<div class="row text-align-center">
+    <h5>Выбор провода: </h5>
+</div>
+
+<RadzenDropDown Placeholder="Выберите марку провода" Change="OnChange" @bind-Value="@value" Data="@wires" TextProperty="Name" ValueProperty="Id" Style="width: 100%; max-width: 400px;" Name="Name"/>
+
+
+@code {
+    int value;
+
+    [CascadingParameter(Name = "WireSet")]
+    public List<Wire> wires { get; set; }
+
+    [CascadingParameter(Name = "Wire")]
+    public Wire Wire { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        // wires = WireRepository.Wires;
+    }
+
+    public async Task OnChange()
+    {
+        var result = wires.ToArray()[value - 1];
+        Wire.Name = result.Name;
+        Wire.ActiveResistance = result.ActiveResistance;
+        Wire.InductivityResistance = result.InductivityResistance;
+    }
+}

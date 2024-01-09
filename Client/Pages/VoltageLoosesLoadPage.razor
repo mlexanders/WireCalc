@@ -1,0 +1,85 @@
+﻿@page "/voltageLoosesLoad"
+
+
+<RadzenTemplateForm Data="@models" Submit="@((VoltageLoadViewModel args) => { Submit(args); })">
+    <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenFieldset Text="Расчет потерь напряжения - по P,Q">
+                <RadzenStack Gap="1rem">
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="P" Component="P"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.P"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="R" Component="R"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.R"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="Q" Component="Q"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.Q"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="X" Component="X"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.X"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="U" Component="U"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.U"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+        <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Расчет"/>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@result
+
+@code {
+    private double? result;
+    private readonly VoltageLoadViewModel models = new();
+
+    void Submit(VoltageLoadViewModel arg)
+    {
+        result = (models.P * models.R + models.Q * models.X) / models.U;
+    }
+
+    public class VoltageLoadViewModel
+    {
+        public double? P { get; set; }
+        public double? R { get; set; }
+        public double? Q { get; set; }
+        public double? X { get; set; }
+        public double? U { get; set; }
+    }
+
+}

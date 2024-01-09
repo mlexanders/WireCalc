@@ -1,0 +1,20 @@
+@page "/StatusCode/{responseCode}"
+@inject NavigationManager NavigationManager
+
+
+<RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" class="rz-justify-content-center rz-align-items-center" Style="width: 90%; height: 90%; visibility: visible; position: absolute" >
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+        <RadzenText TextStyle="TextStyle.DisplayH3">StatusCode is  @ResponseCode</RadzenText>
+
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="4px">
+             <RadzenButton Variant="Variant.Outlined" Click="@((a) => BackHome())" Text="На главную" ButtonStyle="Radzen.ButtonStyle.Info" />
+        </RadzenStack>
+</RadzenStack>
+
+@code {
+    [Parameter]
+    public string ResponseCode { get; set; }
+    
+    void BackHome() => NavigationManager.NavigateTo("/");
+}

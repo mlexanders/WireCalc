@@ -1,0 +1,77 @@
+﻿@page "/airLine"
+@using WireCalc.Client.Models
+@using WireCalc.Client.Components
+@using WireCalc.Client.Repository
+@inject WireRepository WireRepository
+@rendermode @(new InteractiveWebAssemblyRenderMode())
+
+
+<h3>Расчет параметров схемы замещения - Воздушная линия</h3>
+
+
+<div class="mt-4 mb-2 row">
+    <div class="col col 4">
+        <CascadingValue Value="@Wires" Name="WireSet">
+            <CascadingValue Value="@wire" Name="Wire">
+                <WireSelect></WireSelect>
+            </CascadingValue>
+        </CascadingValue>
+    </div>
+</div>
+
+<div class="mb-2 row">
+    <div class="col col-4 text-align-center">
+        <h5>Длина провода (км): </h5>
+        <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="@value" Placeholder="Введите длину провода" InputAttributes="@(new Dictionary<string, object> { { "aria-label", "enter value" } })"/>
+    </div>
+</div>
+
+<div class="mb-2 row">
+    <div class="col col-4 m2">
+        <RadzenButton Style="width:150px" Text="Расчет" Click="Process"></RadzenButton>
+    </div>
+</div>
+
+
+<div class="mb-2 row">
+    <div class="col col-4 ">
+        <h5>Активное сопротивление(r):</h5>
+    </div>
+
+    <div class="col col-3 ">
+        <h5>@result1 Ом</h5>
+    </div>
+</div>
+
+<div class="mb-2 row">
+    <div class="col col-4 ">
+        <h5>Индуктивное сопротивление(x):</h5>
+    </div>
+
+    <div class="col col-3 ">
+        <h5>@result2 Ом</h5>
+    </div>
+</div>
+
+
+@code {
+    int? value;
+    double? result1;
+    double? result2;
+
+    public Wire wire = new();
+    public List<Wire> Wires = new();
+
+    protected override void OnInitialized()
+    {
+        Wires = WireRepository.WiresFromAirLine;
+        base.OnInitialized();
+    }
+
+    private void Process()
+    {
+        result1 = wire.ActiveResistance * value;
+        result2 = wire.InductivityResistance * value;
+        StateHasChanged();
+    }
+}

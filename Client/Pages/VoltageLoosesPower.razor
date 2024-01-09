@@ -1,0 +1,100 @@
+﻿@page "/voltageLoosesPower"
+
+
+<RadzenTemplateForm Data="@models" Submit="@((VoltagePowerViewModel args) => { Submit(args); })">
+    <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenFieldset Text="Расчет потерь напряжения - по S">
+                <RadzenStack Gap="1rem">
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="R" Component="R"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.R"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="X" Component="X"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.X"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="S" Component="S"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.S"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="CosPhi" Component="CosPhi"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.CosPhi"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="SinPhi" Component="SinPhi"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.SinPhi"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="U" Component="U"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.U"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+        <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Расчет"/>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@result
+
+@code {
+    private double? result;
+    private readonly VoltagePowerViewModel models = new();
+
+
+    void Submit(VoltagePowerViewModel arg)
+    {
+        result = (models.S * models.CosPhi * models.R + models.S * models.SinPhi * models.X) / models.U;
+    }
+
+    public class VoltagePowerViewModel
+    {
+        public double? R { get; set; }
+        public double? X { get; set; }
+        public double? S { get; set; }
+        public double? CosPhi { get; set; }
+        public double? SinPhi { get; set; }
+        public double? U { get; set; }
+    }
+
+}
