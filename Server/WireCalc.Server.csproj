@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Radzen.Blazor" Version="*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
     <ProjectReference Include="..\Client\WireCalc.Client.csproj" />
   </ItemGroup>
   <ItemGroup>
