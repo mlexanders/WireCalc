@@ -1,0 +1,130 @@
+﻿@page "/PowerLosses"
+@using WireCalc.Client.Repository
+@using WireCalc.Client.Models
+@using WireCalc.Client.Definitions
+@using WireCalc.Client.Utils
+@using WireCalc.Client.ViewModels
+@inject WireRepository WireRepository
+
+
+
+<RadzenTemplateForm Data="@_model" Submit="@((PowerLossesViewModel args) => { Submit(args);})">
+    <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenFieldset Text="@_text">
+                <RadzenStack Gap="1rem">
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="P(кВт)" Component="P"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="@_model.P"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="Q(квар)" Component="Q"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.Q"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="V(кВ)" Component="V"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.V"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    
+                    <RadzenRow AlignItems="AlignItems.Center">
+                         <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="Выберите провод:" Component="DropDownWire"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenDropDown @bind-Value="@(_model.Wire)" Data="@(_wires.GetAll())" 
+                                            TextProperty="Text" ValueProperty="Value" Name="DropDownWire"/>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenLabel Text="Длина провода: " Component="L"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.L"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="6" SizeMD="6">
+                            <RadzenLabel Text="Результат:" Component="L"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="6" SizeMD="6">
+                                @_result
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+        <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Расчет"/>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+
+
+
+@code {
+    private List<Wire> _wires;
+    private PowerLossesViewModel _model = new PowerLossesViewModel();
+    private string _text;
+    private double _result;
+
+    [Parameter, SupplyParameterFromQuery]
+    public int CableLineTypeParam { get; set; }
+    private CableLineType CableLineType => (CableLineType)CableLineTypeParam;
+
+
+    protected override async Task OnInitializedAsync() => SetWires();
+
+    protected override void OnParametersSet() => SetWires();
+
+    private void SetWires()
+    {
+        if (CableLineType is CableLineType.CableLine)
+        {
+            _wires = WireRepository.WiresFromCableLine;
+            _text = "Рассчет потери мощности КЛ";
+        }
+        else if (CableLineType is CableLineType.AirLine)
+        {
+            _wires = WireRepository.WiresFromAirLine;
+            _text = "Рассчет потери мощности ВЛ";
+        }
+
+        _result = 0;
+    }
+
+    private void Submit(PowerLossesViewModel args)
+    {
+        var r = (_model?.Wire?.ActiveResistance * _model?.L) ?? 0;
+        var x = CableLineType is CableLineType.CableLine ?
+            0 :  (_model?.Wire?.InductivityResistance * _model?.L) ?? 0;
+
+        var P = Math.Pow(_model?.P ?? 0, 2);
+        var Q = Math.Pow(_model?.Q ?? 0, 2);
+        var V = Math.Pow(_model?.V ?? 0, 2);
+
+        var S = ((P + Q) / V) * Math.Sqrt(r * r + x * x);
+        _result = S;
+    }
+}

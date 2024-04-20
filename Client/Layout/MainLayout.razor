@@ -43,9 +43,9 @@
             </RadzenPanelMenuItem>
 
             <RadzenPanelMenuItem Icon="fingerprint" IconColor="@Colors.Secondary" Text="Расчет потерь мощности">
-                <RadzenPanelMenuItem Text="Воздушная линия" Path="/userList1"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Кабельная линия" Path="/userList2"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Трансформатор" Path="/userList3"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Воздушная линия" Path="/PowerLosses?CableLineTypeParam=1"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Кабельная линия" Path="/PowerLosses?CableLineTypeParam=2"></RadzenPanelMenuItem>
+                @* <RadzenPanelMenuItem Text="Трансформатор" Path="/userList3"></RadzenPanelMenuItem> *@
             </RadzenPanelMenuItem>
 
             <RadzenPanelMenuItem Icon="fingerprint" IconColor="@Colors.DangerDark" Text="Расчет потерь энергии">
