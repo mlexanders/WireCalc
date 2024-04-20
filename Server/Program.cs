@@ -37,6 +37,7 @@ app.MapRazorComponents<App>()
    .AddInteractiveWebAssemblyRenderMode()
    .AddAdditionalAssemblies(typeof(WireCalc.Client._Imports).Assembly);
 
-app.UseStatusCodePagesWithRedirects("/StatusCode/{0}");
+app.UseStatusCodePages();
+app.UseStatusCodePagesWithRedirects("/StatusCode?ResponseCode={0}");
 
 app.Run();
