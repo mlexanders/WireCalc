@@ -28,7 +28,7 @@
 
         <RadzenPanelMenu>
 
-            <RadzenPanelMenuItem Icon="home" Text="Главная" Path=""/>
+            <RadzenPanelMenuItem Icon="home" Text="Главная" Path="/"/>
 
             <RadzenPanelMenuItem Icon="fingerprint" IconColor="@Colors.Secondary" Text="Расчет параметров схемы замещения">
                 <RadzenPanelMenuItem Text="Воздушная линия" Path="/airLine"></RadzenPanelMenuItem>
@@ -49,8 +49,8 @@
             </RadzenPanelMenuItem>
 
             <RadzenPanelMenuItem Icon="fingerprint" IconColor="@Colors.DangerDark" Text="Расчет потерь энергии">
-                <RadzenPanelMenuItem Text="Воздушная линия" Path="/userList11"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Кабельная линия" Path="/userList22"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Воздушная линия" Path="/EnergyLossesCableLine?CableLineTypeParam=1"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Кабельная линия" Path="/EnergyLossesCableLine?CableLineTypeParam=2"></RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Трансформатор" Path="/userList33"></RadzenPanelMenuItem>
             </RadzenPanelMenuItem>
 

@@ -41,15 +41,15 @@
     </div>
 </div>
 
-<div class="mb-2 row">
-    <div class="col col-4 ">
-        <h5>Индуктивное сопротивление(x):</h5>
-    </div>
-
-    <div class="col col-3 ">
-        <h5>@result2 Ом</h5>
-    </div>
-</div>
+@* <div class="mb-2 row"> *@
+@*     <div class="col col-4 "> *@
+@*         <h5>Индуктивное сопротивление(x):</h5> *@
+@*     </div> *@
+@* *@
+@*     <div class="col col-3 "> *@
+@*         <h5>@result2 Ом</h5> *@
+@*     </div> *@
+@* </div> *@
 
 
 @code {
@@ -69,8 +69,8 @@
 
     private void Process()
     {
-        result1 = wire.ActiveResistance * value;
-        result2 = wire.InductivityResistance * value;
+        result1 = Math.Round(wire.ActiveResistance * value ?? 0, 3);
+        result2 = Math.Round(wire.InductivityResistance * value ?? 0, 3);
         StateHasChanged();
     }
 

@@ -8,61 +8,65 @@
                 <RadzenStack Gap="1rem">
 
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="R" Component="R"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
-                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.R"></RadzenNumeric>
+                            <RadzenLabel Text="Полная мощность (S, кВА):" Component="S"/>
                         </RadzenColumn>
-                    </RadzenRow>
-
-
-                    <RadzenRow AlignItems="AlignItems.Center">
                         <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="X" Component="X"/>
-                        </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="8">
-                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.X"></RadzenNumeric>
-                        </RadzenColumn>
-                    </RadzenRow>
-
-
-                    <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="S" Component="S"/>
-                        </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="8">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.S"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Активное сопротивление (r, Ом):" Component="R"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.R"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
 
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="CosPhi" Component="CosPhi"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Индуктивное споротивление (x, Ом):" Component="X"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.X"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Угол сдвига фаз, Cos[Phi]:" Component="CosPhi"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.CosPhi"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
-
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="SinPhi" Component="SinPhi"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Угол сдвига фаз, Sin[Phi]:" Component="SinPhi"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.SinPhi"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Номинальное напряжение (U, кВ):" Component="U"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.U"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
 
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="U" Component="U"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
-                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.U"></RadzenNumeric>
+                            <RadzenLabel Text="Потери напряжения составят:"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            @($"{result}  В")
                         </RadzenColumn>
                     </RadzenRow>
 
@@ -84,7 +88,8 @@
 
     void Submit(VoltagePowerViewModel arg)
     {
-        result = (models.S * models.CosPhi * models.R + models.S * models.SinPhi * models.X) / models.U;
+        var res = (models.S * models.CosPhi * models.R + models.S * models.SinPhi * models.X) / models.U;
+        result = Math.Round(res ?? 0, 3);
     }
 
     public class VoltagePowerViewModel

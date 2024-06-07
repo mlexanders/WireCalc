@@ -8,48 +8,56 @@
                 <RadzenStack Gap="1rem">
 
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="P" Component="P"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Активная мощность (P, кВт):" Component="P"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.P"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
-
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="R" Component="R"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Реактивная мощность (Q, квар):" Component="Q"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.Q"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Активное сопротивление (r, Ом):" Component="R"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.R"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="Q" Component="Q"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
-                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.Q"></RadzenNumeric>
+                            <RadzenLabel Text="Индуктивное споротивление (x, Ом):" Component="X"/>
                         </RadzenColumn>
-                    </RadzenRow>
-
-                    <RadzenRow AlignItems="AlignItems.Center">
                         <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="X" Component="X"/>
-                        </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="8">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.X"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="U" Component="U"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Номинальное напряжение (U, кВ):" Component="U"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="models.U"></RadzenNumeric>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="8">
+                            <RadzenLabel Text="Потери напряжения составят:" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            @($"{result}  В")
                         </RadzenColumn>
                     </RadzenRow>
 
@@ -62,7 +70,6 @@
     </RadzenStack>
 </RadzenTemplateForm>
 
-@result
 
 @code {
     private double? result;
@@ -70,7 +77,8 @@
 
     void Submit(VoltageLoadViewModel arg)
     {
-        result = (models.P * models.R + models.Q * models.X) / models.U;
+        var res = (models.P * models.R + models.Q * models.X) / models.U;
+        result = Math.Round(res ?? 0, 3);
     }
 
     public class VoltageLoadViewModel

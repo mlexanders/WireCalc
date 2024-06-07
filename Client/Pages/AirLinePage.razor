@@ -55,12 +55,12 @@
 
 
 @code {
-    int? value;
-    double? result1;
-    double? result2;
+    private int? value;
+    private double? result1;
+    private double? result2;
 
-    public Wire wire = new();
-    public List<Wire> Wires = new();
+    private Wire wire = new();
+    private List<Wire> Wires = new();
 
     protected override void OnInitialized()
     {
@@ -70,8 +70,8 @@
 
     private void Process()
     {
-        result1 = wire.ActiveResistance * value;
-        result2 = wire.InductivityResistance * value;
+        result1 = Math.Round(wire.ActiveResistance * value ?? 0, 3);
+        result2 = Math.Round(wire.InductivityResistance * value ?? 0, 3);
         StateHasChanged();
     }
 }

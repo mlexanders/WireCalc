@@ -1,70 +1,67 @@
-﻿@page "/PowerLosses"
-@using WireCalc.Client.Repository
-@using WireCalc.Client.Models
+﻿@page "/EnergyLossesCableLine"
 @using WireCalc.Client.Definitions
-@using WireCalc.Client.Utils
-@using WireCalc.Client.ViewModels
-@inject WireRepository WireRepository
 
 
-<RadzenTemplateForm Data="@_model" Submit="@((PowerLossesViewModel args) => { Submit(args);})">
+<RadzenTemplateForm Data="@_model" Submit="@((EnergyLossesViewModel args) => { Submit(args);})">
     <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
-        <RadzenColumn Size="12" SizeMD="6">
+        <RadzenColumn Size="12" SizeMD="8">
             <RadzenFieldset Text="@_text">
                 <RadzenStack Gap="1rem">
 
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenColumn Size="12" SizeMD="8">
                             <RadzenLabel Text="Активная мощность (P, кВт):" Component="P"/>
                         </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="@_model.P"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
+
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenColumn Size="12" SizeMD="8">
                             <RadzenLabel Text="Реактивная мощность (Q, квар):" Component="Q"/>
                         </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.Q"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
 
+
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenColumn Size="12" SizeMD="8">
                             <RadzenLabel Text="Номинальное напряжение (U, кВ):" Component="U"/>
                         </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenColumn Size="12" SizeMD="4">
                             <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.V"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
                     
                     <RadzenRow AlignItems="AlignItems.Center">
-                         <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="Выберите провод:" Component="DropDownWire"/>
-                        </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="8">
-                            <RadzenDropDown @bind-Value="@(_model.Wire)" Data="@(_wires.GetAll())" 
-                                            TextProperty="Text" ValueProperty="Value" Name="DropDownWire"/>
+                            <RadzenLabel Text="Активное сопротивление (r, Ом):" Component="R"/>
                         </RadzenColumn>
-                    </RadzenRow>
-                    
-                    <RadzenRow AlignItems="AlignItems.Center">
                         <RadzenColumn Size="12" SizeMD="4">
-                            <RadzenLabel Text="Длина провода (км): " Component="L"/>
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.R"></RadzenNumeric>
                         </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow AlignItems="AlignItems.Center">
                         <RadzenColumn Size="12" SizeMD="8">
-                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.L"></RadzenNumeric>
+                            <RadzenLabel Text="Число часов использования максимальной нагрузки (Tм, ч) " Component="Tm"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenNumeric ShowUpDown="false" TValue="double?" @bind-Value="_model.Tm"></RadzenNumeric>
                         </RadzenColumn>
                     </RadzenRow>
                     
+                    
                     <RadzenRow AlignItems="AlignItems.Center">
-                        <RadzenColumn Size="6" SizeMD="4">
-                            <RadzenLabel Text="Потери мощности составят:" Component="L"/>
+                        <RadzenColumn Size="6" SizeMD="8">
+                            <RadzenLabel Text="Потери энергии составят:" Component="L"/>
                         </RadzenColumn>
-                        <RadzenColumn Size="5" SizeMD="8">
-                            @($"{_result} кВА")
+                        <RadzenColumn Size="5" SizeMD="4">
+                            @($"{_result} кВт * ч")
                         </RadzenColumn>
                     </RadzenRow>
 
@@ -79,10 +76,18 @@
 
 
 
-
 @code {
-    private List<Wire> _wires;
-    private PowerLossesViewModel _model = new PowerLossesViewModel();
+
+    private class EnergyLossesViewModel
+    {
+        public double? P { get; set; }
+        public double? Q { get; set; }
+        public double? V { get; set; }
+        public double? R { get; set; }
+        public double? Tm { get; set; }
+    }
+
+    private EnergyLossesViewModel _model = new ();
     private string _text;
     private double _result;
 
@@ -99,30 +104,29 @@
     {
         if (CableLineType is CableLineType.CableLine)
         {
-            _wires = WireRepository.WiresFromCableLine;
-            _text = "Рассчет потери мощности КЛ";
+            // _wires = WireRepository.WiresFromCableLine;
+            _text = "Рассчет потери энергии КЛ";
         }
         else if (CableLineType is CableLineType.AirLine)
         {
-            _wires = WireRepository.WiresFromAirLine;
-            _text = "Рассчет потери мощности ВЛ";
+            // _wires = WireRepository.WiresFromAirLine;
+            _text = "Рассчет потери энергии ВЛ";
         }
 
         _result = 0;
     }
 
-    private void Submit(PowerLossesViewModel args)
+    private void Submit(EnergyLossesViewModel args)
     {
-        var r = (_model?.Wire?.ActiveResistance * _model?.L) ?? 0;
-        
-        var x = CableLineType is CableLineType.CableLine ?
-            0 :  (_model?.Wire?.InductivityResistance * _model?.L) ?? 0;
-
+        const int a = 12 / 1;
+       
         var P = Math.Pow(_model?.P ?? 0, 2);
         var Q = Math.Pow(_model?.Q ?? 0, 2);
         var V = Math.Pow(_model?.V ?? 0, 2);
 
-        var S = ((P + Q) / V) * Math.Sqrt(r * r + x * x); /// тут беда!
+        var ch = Math.Pow((0.124 + (_model?.Tm / 10000.0)) ?? 0, 2) * 8760;
+        
+        var S = ((P + Q) / V) * ch * (_model?.R ?? 0);
         _result = Math.Round(S, 3);
     }
 }
